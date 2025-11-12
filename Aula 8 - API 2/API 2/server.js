@@ -9,6 +9,13 @@ app.use(express.json());
 // Criar ou abrir o banco
 const db = new sqlite3.Database("./database.db");
 
+// Cria a tabela (se não existir)
+db.run(`CREATE TABLE IF NOR EXISTS notas(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    titulo TEXT,
+    conteudo TEXT
+)`);
+
 // Rota de inserção
 app.post('/notas', (req,res) => {
     const {titulo, conteudo} = req.body;
@@ -21,13 +28,6 @@ app.post('/notas', (req,res) => {
         }
     );
 });
-
-// Cria a tabela (se não existir)
-db.run(`CREATE TABLE IF NOR EXISTS notas(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    titulo TEXT,
-    conteudo TEXT
-)`);
 
 // Inicia o servidor
 app.listen(PORT, () => {
