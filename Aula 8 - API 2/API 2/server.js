@@ -16,6 +16,20 @@ db.run(`CREATE TABLE IF NOT EXISTS notas(
     conteudo TEXT
 )`);
 
+// Rota principal
+app.get("/", (req, res) => {
+    res.json({
+        message: "Crud NODE.JS",
+        rotas :{
+            listar_todas: "/notas",
+            criar_nota: "POST /notas",
+            buscar_por_id: "/notas/:id",
+            atualizar: "PUT /notas/:id",
+            deletar: "DELETE /notas/:id"
+        }
+    });
+});
+
 // Rota de inserção
 app.post('/notas', (req,res) => {
     const {titulo, conteudo} = req.body;
