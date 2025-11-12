@@ -10,7 +10,7 @@ app.use(express.json());
 const db = new sqlite3.Database("./database.db");
 
 // Cria a tabela (se não existir)
-db.run(`CREATE TABLE IF NOR EXISTS notas(
+db.run(`CREATE TABLE IF NOT EXISTS notas(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     titulo TEXT,
     conteudo TEXT
@@ -24,7 +24,7 @@ app.post('/notas', (req,res) => {
         [titulo, conteudo],
         function (err){
             if (err) return res.status(500).json({error: err.message});
-            res.json({id:this.lastID, titulo, conteudo})
+            res.json({id:this.lastID, titulo, conteudo});
         }
     );
 });
