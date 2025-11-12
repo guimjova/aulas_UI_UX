@@ -34,13 +34,48 @@ app.get("/", (req, res) => {
 app.post('/notas', (req,res) => {
     const {titulo, conteudo} = req.body;
     db.run(
-        "INSERT INTO notas (titulos , conteudo) VALUES (?, ?)",
+        "INSERT INTO notas (titulo , conteudo) VALUES (?, ?)",
         [titulo, conteudo],
         function (err){
             if (err) return res.status(500).json({error: err.message});
             res.json({id:this.lastID, titulo, conteudo});
         }
     );
+});
+
+//buscar 
+
+app.get("/notas/:id", (req, res) => {
+  db.get("SELECT * FROM notas WHERE id = ?", [req.params.id], (err, row) => {
+    if (err) return res.status(500).json({ error: err.message });
+    if (!row) return res.status(404).json({ error: "Nota não encontrada" });
+    res.json(row);
+  });
+});
+
+// Rota - Atualizar
+app.put("/notas/:id", (req, res) => {
+  const { titulo, conteudo } = req.body;
+  db.run(
+    "UPDATE notas SET titulo = ?, conteudo = ? WHERE id = ?",
+    [titulo, conteudo, req.params.id],
+    function (err) {
+      if (err) return res.status(500).json({ error: err.message });
+      if (this.changes === 0)
+        return res.status(404).json({ error: "Nota não encontrada" });
+      res.json({ id: req.params.id, titulo, conteudo });
+    }
+  );
+});
+
+// Rota - Deletar
+app.delete("/notas/:id", (req, res) => {
+  db.run("DELETE FROM notas WHERE id = ?", [req.params.id], function (err) {
+    if (err) return res.status(500).json({ error: err.message });
+    if (this.changes === 0)
+      return res.status(404).json({ error: "Nota não encontrada" });
+    res.json({ message: "Nota deletada" });
+  });
 });
 
 // Inicia o servidor
