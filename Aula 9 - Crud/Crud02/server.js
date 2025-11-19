@@ -6,6 +6,9 @@ const PORT = 3000;
 //MIDDLEWARE PARA JSON
 app.use(express.json());
 
+// Para o front consumir o backend
+app.use(express.static("public"));
+
 //cria ou abrir o banco
 const db = new sqlite3.Database("./database.db");
 
